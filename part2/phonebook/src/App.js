@@ -24,7 +24,6 @@ const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
-  const [filteredPersons, setFilteredPersons] = useState(persons);
   const [filter, setFilter] = useState('');
   const [message, setMessage] = useState(null);
 
@@ -32,13 +31,8 @@ const App = () => {
     personService.getAll()
     .then(initialPersons => {
       setPersons(initialPersons)
-      setFilteredPersons(persons);
     });
   }, []);
-
-  useEffect(() => {
-    setFilteredPersons(persons.filter((person) => person.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase())));
-  }, [filter, persons])
 
 
   const onNameChange = (event) => {
@@ -62,7 +56,6 @@ const App = () => {
       personService.create({ name: newName, number: newNumber })
       .then(personObject => {
         setPersons(persons.concat(personObject));
-        setFilteredPersons(persons.concat(personObject));
         setMessage({ display: `Added '${personObject.name}'`, className: SUCCESS });
         setTimeout(() => {
           setMessage(null);
@@ -90,11 +83,11 @@ const App = () => {
       personService.deleteEntry(id, name)
       .then(() => {
         setPersons(persons.filter(person => person.id !== id));
-        setFilteredPersons(persons);
       })
     }
   }
 
+  const filteredPersons = persons.filter((person) => person.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase()))
   return (
     <div>
       <h2>Phonebook</h2>
