@@ -47,6 +47,13 @@ const App = () => {
     setFilter(event.target.value);
   }
 
+  const setDisplayMessage = (display, className, timer) => {
+    setMessage({ display, className });
+    setTimeout(() => {
+      setMessage(null);
+    }, timer);
+  }
+
   const addPerson = (event) => {
     event.preventDefault();
     const person = persons.find(element => element.name === newName);
@@ -56,11 +63,15 @@ const App = () => {
       personService.create({ name: newName, number: newNumber })
       .then(personObject => {
         setPersons(persons.concat(personObject));
-        setMessage({ display: `Added '${personObject.name}'`, className: SUCCESS });
-        setTimeout(() => {
-          setMessage(null);
-        }, 5000);
-      });
+        setDisplayMessage(`Added '${personObject.name}'`, SUCCESS, 5000);
+      })
+      .catch(error => {
+        setDisplayMessage(
+          error.response.data.error, 
+          ERROR, 
+          5000
+        )
+      })
     }
     else if(window.confirm(`${newName} is already added to the phonebook, replace the old number with new one?`))
     {
@@ -68,10 +79,11 @@ const App = () => {
       .then((returnedPerson) => {
         setPersons(persons.map(element => element.id !== returnedPerson.id ? element : returnedPerson));
       }).catch(() => {
-        setMessage({ display: `Person '${person.name}' was already removed from server`, className: ERROR });
-        setTimeout(() => {
-          setMessage(null);
-        }, 5000);
+        setDisplayMessage(
+          `Person '${person.name}' was already removed from server`, 
+          ERROR, 
+          5000, 
+        )
         setPersons(persons.filter(element => element.id !== person.id));
       })
     }
