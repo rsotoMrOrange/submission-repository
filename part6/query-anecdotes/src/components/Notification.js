@@ -1,4 +1,5 @@
-const Notification = () => {
+const Notification = ({ notification }) => {
+  const { message, isShown } = notification
   const style = {
     border: 'solid',
     padding: 10,
@@ -6,11 +7,11 @@ const Notification = () => {
     marginBottom: 5
   }
   
-  if (true) return null
+  if (!isShown) return null
 
   return (
     <div style={style}>
-      
+      {message}
     </div>
   )
 }
