@@ -3,19 +3,7 @@ import {
   useMatch, Routes,
   Route, Link, useNavigate
 } from 'react-router-dom';
-
-const Menu = () => {
-  const padding = {
-    paddingRight: 5
-  }
-  return (
-    <div>
-      <a href='#' style={padding}>anecdotes</a>
-      <a href='#' style={padding}>create new</a>
-      <a href='#' style={padding}>about</a>
-    </div>
-  )
-}
+import { useField } from './hooks';
 
 const AnecdoteList = ({ anecdotes }) => (
   <div>
@@ -37,7 +25,7 @@ const About = () => (
     <em>An anecdote is a brief, revealing account of an individual person or an incident.
       Occasionally humorous, anecdotes differ from jokes because their primary purpose is not simply to provoke laughter but to reveal a truth more general than the brief tale itself,
       such as to characterize a person by delineating a specific quirk or trait, to communicate an abstract idea about a person, place, or thing through the concrete details of a short narrative.
-      An anecdote is "a story with a point."</em>
+      An anecdote is &quot;a story with a point.&quot;</em>
 
     <p>Software engineering is full of excellent anecdotes, at this app you can find the best and add more.</p>
   </div>
@@ -51,20 +39,27 @@ const Footer = () => (
   </div>
 )
 
-const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+const CreateNew = (props) => { 
+  const content = useField('', 'text', 'content');
+  const author = useField('', 'text', 'author');
+  const info = useField('', 'text', 'info');
 
 
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.fieldProps.value,
+      author: author.fieldProps.value,
+      info: info.fieldProps.value,
       votes: 0
     })
+  }
+
+  const handleReset = (e) => {
+    e.preventDefault();
+    content.reset();
+    author.reset();
+    info.reset();
   }
 
   return (
@@ -73,17 +68,18 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input {...content.fieldProps} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input {...author.fieldProps} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+          <input {...info.fieldProps} />
         </div>
         <button>create</button>
+        <button onClick={handleReset}>reset</button>
       </form>
     </div>
   )
@@ -116,13 +112,13 @@ const App = () => {
     }
   ]);
   const navigate = useNavigate();
+  const [notification, setNotification] = useState('')
 
   const match = useMatch('/anecdotes/:id');
   const anecdote = match
     ? anecdotes.find(anecdote => anecdote.id === Number(match.params.id))
     : null;
 
-  const [notification, setNotification] = useState('')
 
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
@@ -170,12 +166,6 @@ const App = () => {
         <Route path="/about" element={<About />} />
         <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
       </Routes>
-      {/*<div>
-        <Menu />
-        <AnecdoteList anecdotes={anecdotes} />
-        <About />
-        <CreateNew addNew={addNew} />
-      </div>*/}
       <Footer />
     </div>
   )
