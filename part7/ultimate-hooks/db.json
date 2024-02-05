@@ -1,0 +1,67 @@
+{
+  "notes": [
+    {
+      "id": 1,
+      "content": "custom-hooks are awesome!"
+    },
+    {
+      "id": 2,
+      "content": "best feature ever <3"
+    },
+    {
+      "content": "nextjs next",
+      "id": 3
+    },
+    {
+      "content": "nextjs next",
+      "id": 4
+    },
+    {
+      "content": "nextjs next 2",
+      "id": 5
+    },
+    {
+      "content": "nextjs next 3",
+      "id": 6
+    },
+    {
+      "id": 7
+    },
+    {
+      "id": 8
+    },
+    {
+      "id": 9
+    },
+    {
+      "content": "fdsadfads",
+      "id": 10
+    },
+    {
+      "content": "mongodb",
+      "id": 11
+    }
+  ],
+  "persons": [
+    {
+      "id": 1,
+      "name": "mluukkai",
+      "number": "040-5483923"
+    },
+    {
+      "id": 2,
+      "name": "hellas",
+      "number": "012-123123"
+    },
+    {
+      "name": "soto",
+      "number": "777-2335441",
+      "id": 3
+    },
+    {
+      "name": "soto x2 ",
+      "number": "777-5126559",
+      "id": 4
+    }
+  ]
+}
