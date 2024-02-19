@@ -1,32 +1,32 @@
-import { useState } from 'react'
+import { useState } from "react";
 
 const BlogForm = ({ createBlog }) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-  const [likes, setLikes] = useState(0)
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [url, setUrl] = useState("");
+  const [likes, setLikes] = useState(0);
 
   const addBlog = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     createBlog({
       author,
       title,
       url,
-      likes
-    })
+      likes,
+    });
 
-    setAuthor('')
-    setTitle('')
-    setUrl('')
-    setLikes(0)
-  }
+    setAuthor("");
+    setTitle("");
+    setUrl("");
+    setLikes(0);
+  };
 
   return (
     <form onSubmit={addBlog}>
       <div>
         title
         <input
-          className='title'
+          className="title"
           type="text"
           value={title}
           name="Title"
@@ -36,7 +36,7 @@ const BlogForm = ({ createBlog }) => {
       <div>
         author
         <input
-          className='author'
+          className="author"
           type="text"
           value={author}
           name="Author"
@@ -46,7 +46,7 @@ const BlogForm = ({ createBlog }) => {
       <div>
         url
         <input
-          className='url'
+          className="url"
           type="text"
           value={url}
           name="Url"
@@ -56,7 +56,7 @@ const BlogForm = ({ createBlog }) => {
       <div>
         likes
         <input
-          className='likes'
+          className="likes"
           type="number"
           value={likes}
           name="Likes"
@@ -65,7 +65,7 @@ const BlogForm = ({ createBlog }) => {
       </div>
       <button type="submit">save</button>
     </form>
-  )
-}
+  );
+};
 
-export default BlogForm
+export default BlogForm;

@@ -18,7 +18,8 @@
     "eject": "react-scripts eject",
     "cypress:open": "cypress open",
     "eslint": "eslint .",
-    "test:e2e": "cypress run"
+    "test:e2e": "cypress run",
+    "prettier:check": "npx prettier . --check"
   },
   "eslintConfig": {
     "extends": [
@@ -50,7 +51,8 @@
     "eslint-plugin-jest": "^27.2.1",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0"
+    "jest-environment-jsdom": "^29.7.0",
+    "prettier": "3.2.5"
   },
   "jest": {
     "testEnvironment": "jsdom",
