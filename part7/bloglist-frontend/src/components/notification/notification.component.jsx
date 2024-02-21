@@ -6,8 +6,6 @@ const Notification = () => {
     (state) => state.notification,
   );
 
-  console.log(`message: ${message}, show: ${show}, className: ${className}`);
-
   if (!show) {
     return null;
   }

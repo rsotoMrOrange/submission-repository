@@ -22,13 +22,6 @@ const App = () => {
 
   const blogFormRef = useRef();
 
-  const setDisplayMessage = (display, className, timer) => {
-    setMessage({ display, className });
-    setTimeout(() => {
-      setMessage(null);
-    }, timer);
-  };
-
   const compareBlogs = (a, b) => {
     return b.likes - a.likes;
   };
@@ -57,13 +50,11 @@ const App = () => {
       window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
       blogService.setToken(user.token);
       setUser(user);
-      // setDisplayMessage(`Welcome ${username}`, SUCCESS, 5000);
       dispatch(setNotification(`Welcome ${username}`, SUCCESS, 5000));
 
       setPassword("");
       setUsername("");
     } catch (e) {
-      // setDisplayMessage("Wrong credentials", ERROR, 5000);
       dispatch(setNotification("Wrong credentials", ERROR, 5000));
     }
   };
@@ -73,11 +64,6 @@ const App = () => {
       blogFormRef.current.toggleVisibility();
       const newBlog = await blogService.create(blogObject);
       setBlogs(blogs.concat(newBlog));
-      /* setDisplayMessage(
-        `new blog added '${newBlog.title}' written by ${newBlog.author}`,
-        SUCCESS,
-        5000,
-      ); */
       dispatch(
         setNotification(
           `new blog added '${newBlog.title}' written by ${newBlog.author}`,
@@ -86,7 +72,6 @@ const App = () => {
         ),
       );
     } catch (error) {
-      // setDisplayMessage(`Something went wrong ${error.message}`, ERROR, 5000);
       dispatch(
         setNotification(`Something went wrong ${error.message}`, ERROR, 5000),
       );
@@ -94,7 +79,6 @@ const App = () => {
   };
 
   const updateBlog = async (id, blog) => {
-    console.log(`id: ${id}, blog: ${blog}`);
     try {
       const updatedBlog = await blogService.update(id, {
         ...blog,
@@ -104,7 +88,6 @@ const App = () => {
         blogs.map((blogItem) => (blogItem.id === id ? updatedBlog : blogItem)),
       );
     } catch (error) {
-      // setDisplayMessage(`Something went wrong ${error.message}`, ERROR, 5000);
       dispatch(
         setNotification(`Something went wrong ${error.message}`, ERROR, 5000),
       );
@@ -116,7 +99,6 @@ const App = () => {
       await blogService.remove(id);
       setBlogs(blogs.filter((blog) => blog.id !== id));
     } catch (error) {
-      // setDisplayMessage(`Something went wrong ${error.message}`, ERROR, 5000);
       dispatch(
         setNotification(`Something went wrong ${error.message}`, ERROR, 5000),
       );

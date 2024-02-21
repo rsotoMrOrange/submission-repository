@@ -9,7 +9,6 @@ const notificationSlice = createSlice({
   },
   reducers: {
     messageChange(state, action) {
-      console.log("action: ", action);
       return {
         ...state,
         message: action.payload.message,
