@@ -6,8 +6,9 @@ import loginService from "./services/login";
 import Notification from "./components/notification/notification.component";
 import BlogForm from "./components/blog-form/blog-form.component";
 import Togglable from "./components/togglable/togglable.component";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setNotification } from "./reducers/notificationReducer";
+import { createBlog, initializeBlogs } from "./reducers/blogReducer";
 
 const ERROR = "error";
 const SUCCESS = "success";
@@ -17,8 +18,9 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  let sortedBlogs = [];
   const dispatch = useDispatch();
+  const blogsReducer = useSelector((state) => state.blogs);
+  let sortedBlogs = [];
 
   const blogFormRef = useRef();
 
@@ -27,10 +29,8 @@ const App = () => {
   };
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => {
-      setBlogs(blogs);
-    });
-  }, []);
+    dispatch(initializeBlogs());
+  }, [dispatch]);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
@@ -62,11 +62,10 @@ const App = () => {
   const addBlog = async (blogObject) => {
     try {
       blogFormRef.current.toggleVisibility();
-      const newBlog = await blogService.create(blogObject);
-      setBlogs(blogs.concat(newBlog));
+      dispatch(createBlog(blogObject));
       dispatch(
         setNotification(
-          `new blog added '${newBlog.title}' written by ${newBlog.author}`,
+          `new blog added '${blogObject.title}' written by ${blogObject.author}`,
           SUCCESS,
           5000,
         ),
@@ -139,8 +138,7 @@ const App = () => {
     );
   }
 
-  sortedBlogs = blogs;
-  sortedBlogs.sort(compareBlogs);
+  sortedBlogs = [...blogsReducer].sort(compareBlogs);
   return (
     <div>
       <h2>blogs</h2>

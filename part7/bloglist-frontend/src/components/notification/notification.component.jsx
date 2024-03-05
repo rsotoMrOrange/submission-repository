@@ -10,7 +10,6 @@ const Notification = () => {
     return null;
   }
 
-  // change to useSelector values
   return <div className={className}>{message}</div>;
 };
 
