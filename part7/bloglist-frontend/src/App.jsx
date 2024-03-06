@@ -8,7 +8,12 @@ import BlogForm from "./components/blog-form/blog-form.component";
 import Togglable from "./components/togglable/togglable.component";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotification } from "./reducers/notificationReducer";
-import { createBlog, initializeBlogs } from "./reducers/blogReducer";
+import {
+  createBlog,
+  initializeBlogs,
+  likeBlogThunk,
+  removeBlog,
+} from "./reducers/blogReducer";
 
 const ERROR = "error";
 const SUCCESS = "success";
@@ -79,13 +84,7 @@ const App = () => {
 
   const updateBlog = async (id, blog) => {
     try {
-      const updatedBlog = await blogService.update(id, {
-        ...blog,
-        likes: blog.likes + 1,
-      });
-      setBlogs(
-        blogs.map((blogItem) => (blogItem.id === id ? updatedBlog : blogItem)),
-      );
+      dispatch(likeBlogThunk(id));
     } catch (error) {
       dispatch(
         setNotification(`Something went wrong ${error.message}`, ERROR, 5000),
@@ -95,8 +94,9 @@ const App = () => {
 
   const deleteBlog = async (id) => {
     try {
-      await blogService.remove(id);
-      setBlogs(blogs.filter((blog) => blog.id !== id));
+      // await blogService.remove(id);
+      // setBlogs(blogs.filter((blog) => blog.id !== id));
+      dispatch(removeBlog(id));
     } catch (error) {
       dispatch(
         setNotification(`Something went wrong ${error.message}`, ERROR, 5000),
