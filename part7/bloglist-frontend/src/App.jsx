@@ -14,17 +14,17 @@ import {
   likeBlogThunk,
   removeBlog,
 } from "./reducers/blogReducer";
+import { saveUser } from "./reducers/userReducer";
 
 const ERROR = "error";
 const SUCCESS = "success";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
   const dispatch = useDispatch();
-  const blogsReducer = useSelector((state) => state.blogs);
+  const blogs = useSelector((state) => state.blogs);
+  const { user } = useSelector((state) => state.user);
   let sortedBlogs = [];
 
   const blogFormRef = useRef();
@@ -41,8 +41,7 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
+      dispatch(saveUser(user));
     }
   }, []);
 
@@ -51,10 +50,9 @@ const App = () => {
 
     try {
       const user = await loginService.login({ username, password });
+      dispatch(saveUser(user));
 
       window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
-      blogService.setToken(user.token);
-      setUser(user);
       dispatch(setNotification(`Welcome ${username}`, SUCCESS, 5000));
 
       setPassword("");
@@ -94,8 +92,6 @@ const App = () => {
 
   const deleteBlog = async (id) => {
     try {
-      // await blogService.remove(id);
-      // setBlogs(blogs.filter((blog) => blog.id !== id));
       dispatch(removeBlog(id));
     } catch (error) {
       dispatch(
@@ -138,7 +134,7 @@ const App = () => {
     );
   }
 
-  sortedBlogs = [...blogsReducer].sort(compareBlogs);
+  sortedBlogs = [...blogs].sort(compareBlogs);
   return (
     <div>
       <h2>blogs</h2>

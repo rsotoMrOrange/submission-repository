@@ -1,4 +1,7 @@
 import axios from "axios";
+import store from "../store";
+store.subscribe(listener);
+
 const baseUrl = "/api/blogs";
 
 let token = null;
@@ -6,6 +9,11 @@ let token = null;
 const setToken = (newToken) => {
   token = `Bearer ${newToken}`;
 };
+
+function listener() {
+  let newToken = store.getState().user.token;
+  setToken(newToken);
+}
 
 const getAll = () => {
   const request = axios.get(baseUrl);
