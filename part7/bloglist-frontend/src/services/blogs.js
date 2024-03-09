@@ -1,17 +1,21 @@
 import axios from "axios";
-import store from "../store";
-store.subscribe(listener);
 
 const baseUrl = "/api/blogs";
 
+let store;
 let token = null;
+
+export const injectStore = (_store) => {
+  store = _store;
+  store.subscribe(listener);
+};
 
 const setToken = (newToken) => {
   token = `Bearer ${newToken}`;
 };
 
 function listener() {
-  let newToken = store.getState().user.token;
+  let newToken = store?.getState().user.token;
   setToken(newToken);
 }
 
