@@ -1,18 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
-import Blog from "./components/blog/blog.component";
-import LoginForm from "./components/login-form/login-form.component";
-import loginService from "./services/login";
-import Notification from "./components/notification/notification.component";
-import BlogForm from "./components/blog-form/blog-form.component";
-import Togglable from "./components/togglable/togglable.component";
 import { useDispatch, useSelector } from "react-redux";
+
+import BlogList from "./components/blog-list/blog-list.component";
+import BlogForm from "./components/blog-form/blog-form.component";
+import LoginForm from "./components/login-form/login-form.component";
+import Notification from "./components/notification/notification.component";
+import Togglable from "./components/togglable/togglable.component";
+
+import loginService from "./services/login";
+
+import { createBlog, initializeBlogs } from "./reducers/blogReducer";
 import { setNotification } from "./reducers/notificationReducer";
-import {
-  createBlog,
-  initializeBlogs,
-  likeBlogThunk,
-  removeBlog,
-} from "./reducers/blogReducer";
 import { saveUser } from "./reducers/userReducer";
 
 const ERROR = "error";
@@ -22,15 +20,9 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
-  const blogs = useSelector((state) => state.blogs);
   const { user } = useSelector((state) => state.user);
-  let sortedBlogs = [];
 
   const blogFormRef = useRef();
-
-  const compareBlogs = (a, b) => {
-    return b.likes - a.likes;
-  };
 
   useEffect(() => {
     dispatch(initializeBlogs());
@@ -79,26 +71,6 @@ const App = () => {
     }
   };
 
-  const updateBlog = async (id, blog) => {
-    try {
-      dispatch(likeBlogThunk(id));
-    } catch (error) {
-      dispatch(
-        setNotification(`Something went wrong ${error.message}`, ERROR, 5000),
-      );
-    }
-  };
-
-  const deleteBlog = async (id) => {
-    try {
-      dispatch(removeBlog(id));
-    } catch (error) {
-      dispatch(
-        setNotification(`Something went wrong ${error.message}`, ERROR, 5000),
-      );
-    }
-  };
-
   const loginForm = () => {
     return (
       <Togglable buttonLabel="login">
@@ -133,7 +105,6 @@ const App = () => {
     );
   }
 
-  sortedBlogs = [...blogs].sort(compareBlogs);
   return (
     <div>
       <h2>blogs</h2>
@@ -150,14 +121,7 @@ const App = () => {
         </button>
         {blogForm()}
       </div>
-      {sortedBlogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          updateBlog={() => updateBlog(blog.id, blog)}
-          deleteBlog={deleteBlog}
-        />
-      ))}
+      <BlogList />
     </div>
   );
 };
