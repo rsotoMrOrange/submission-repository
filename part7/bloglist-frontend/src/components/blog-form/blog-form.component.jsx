@@ -1,14 +1,43 @@
-import { useState } from "react";
+import React, { useState, useRef } from "react";
+import { useDispatch } from "react-redux";
 
-const BlogForm = ({ createBlog }) => {
+import Togglable from "../togglable/togglable.component";
+
+import { createBlog } from "../../reducers/blogReducer";
+import { setNotification } from "../../reducers/notificationReducer";
+
+const ERROR = "error";
+const SUCCESS = "success";
+
+const BlogForm = () => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
   const [likes, setLikes] = useState(0);
+  const togglableRef = useRef(null);
+  const dispatch = useDispatch();
+
+  const createBlogFunc = async (blogObject) => {
+    try {
+      togglableRef.current.toggleVisibility();
+      dispatch(createBlog(blogObject));
+      dispatch(
+        setNotification(
+          `new blog added '${blogObject.title}' written by ${blogObject.author}`,
+          SUCCESS,
+          5000,
+        ),
+      );
+    } catch (error) {
+      dispatch(
+        setNotification(`Something went wrong ${error.message}`, ERROR, 5000),
+      );
+    }
+  };
 
   const addBlog = (event) => {
     event.preventDefault();
-    createBlog({
+    createBlogFunc({
       author,
       title,
       url,
@@ -22,49 +51,51 @@ const BlogForm = ({ createBlog }) => {
   };
 
   return (
-    <form onSubmit={addBlog}>
-      <div>
-        title
-        <input
-          className="title"
-          type="text"
-          value={title}
-          name="Title"
-          onChange={({ target }) => setTitle(target.value)}
-        />
-      </div>
-      <div>
-        author
-        <input
-          className="author"
-          type="text"
-          value={author}
-          name="Author"
-          onChange={({ target }) => setAuthor(target.value)}
-        />
-      </div>
-      <div>
-        url
-        <input
-          className="url"
-          type="text"
-          value={url}
-          name="Url"
-          onChange={({ target }) => setUrl(target.value)}
-        />
-      </div>
-      <div>
-        likes
-        <input
-          className="likes"
-          type="number"
-          value={likes}
-          name="Likes"
-          onChange={({ target }) => setLikes(target.value)}
-        />
-      </div>
-      <button type="submit">save</button>
-    </form>
+    <Togglable buttonLabel="New Blog" ref={togglableRef}>
+      <form onSubmit={addBlog}>
+        <div>
+          title
+          <input
+            className="title"
+            type="text"
+            value={title}
+            name="Title"
+            onChange={({ target }) => setTitle(target.value)}
+          />
+        </div>
+        <div>
+          author
+          <input
+            className="author"
+            type="text"
+            value={author}
+            name="Author"
+            onChange={({ target }) => setAuthor(target.value)}
+          />
+        </div>
+        <div>
+          url
+          <input
+            className="url"
+            type="text"
+            value={url}
+            name="Url"
+            onChange={({ target }) => setUrl(target.value)}
+          />
+        </div>
+        <div>
+          likes
+          <input
+            className="likes"
+            type="number"
+            value={likes}
+            name="Likes"
+            onChange={({ target }) => setLikes(target.value)}
+          />
+        </div>
+        <button type="submit">save</button>
+      </form>
+    </Togglable>
   );
 };
 

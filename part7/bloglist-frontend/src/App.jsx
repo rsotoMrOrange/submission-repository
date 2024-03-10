@@ -9,7 +9,7 @@ import Togglable from "./components/togglable/togglable.component";
 
 import loginService from "./services/login";
 
-import { createBlog, initializeBlogs } from "./reducers/blogReducer";
+import { initializeBlogs } from "./reducers/blogReducer";
 import { setNotification } from "./reducers/notificationReducer";
 import { saveUser } from "./reducers/userReducer";
 
@@ -21,8 +21,6 @@ const App = () => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-
-  const blogFormRef = useRef();
 
   useEffect(() => {
     dispatch(initializeBlogs());
@@ -53,24 +51,6 @@ const App = () => {
     }
   };
 
-  const addBlog = async (blogObject) => {
-    try {
-      blogFormRef.current.toggleVisibility();
-      dispatch(createBlog(blogObject));
-      dispatch(
-        setNotification(
-          `new blog added '${blogObject.title}' written by ${blogObject.author}`,
-          SUCCESS,
-          5000,
-        ),
-      );
-    } catch (error) {
-      dispatch(
-        setNotification(`Something went wrong ${error.message}`, ERROR, 5000),
-      );
-    }
-  };
-
   const loginForm = () => {
     return (
       <Togglable buttonLabel="login">
@@ -81,14 +61,6 @@ const App = () => {
           onChangeUsername={({ target }) => setUsername(target.value)}
           onChangePassword={({ target }) => setPassword(target.value)}
         />
-      </Togglable>
-    );
-  };
-
-  const blogForm = () => {
-    return (
-      <Togglable buttonLabel="new blog" ref={blogFormRef}>
-        <BlogForm createBlog={addBlog} />
       </Togglable>
     );
   };
@@ -119,7 +91,7 @@ const App = () => {
         >
           logout
         </button>
-        {blogForm()}
+        <BlogForm />
       </div>
       <BlogList />
     </div>
