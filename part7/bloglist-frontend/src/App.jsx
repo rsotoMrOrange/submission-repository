@@ -25,10 +25,6 @@ const App = () => {
   const { user } = useSelector((state) => state.user);
 
   useEffect(() => {
-    dispatch(initializeBlogs());
-  }, [dispatch]);
-
-  useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);

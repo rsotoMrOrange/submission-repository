@@ -1,14 +1,38 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import blogService from "../../services/blogs";
 import Blog from "../blog/blog.component";
 
 import { setNotification } from "../../reducers/notificationReducer";
-import { likeBlogThunk, removeBlog } from "../../reducers/blogReducer";
 
 const BlogList = () => {
+  const queryClient = useQueryClient();
+
+  const result = useQuery({
+    queryKey: ["blogs"],
+    queryFn: blogService.getAll,
+  });
+  console.log(JSON.parse(JSON.stringify(result)));
+
+  const likeBlogMutation = useMutation({
+    mutationFn: blogService.update,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+    },
+  });
+
+  const deleteBlogMutation = useMutation({
+    mutationFn: blogService.remove,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+    },
+  });
+
+  const blogs = result.data;
+
   const dispatch = useDispatch();
-  const blogs = useSelector((state) => state.blogs);
   let sortedBlogs = [];
 
   const compareBlogs = (a, b) => {
@@ -17,7 +41,14 @@ const BlogList = () => {
 
   const updateBlog = async (id, blog) => {
     try {
-      dispatch(likeBlogThunk(id));
+      let newObject = {
+        ...blog,
+        likes: blog.likes + 1,
+      };
+      likeBlogMutation.mutate({
+        id,
+        newObject,
+      });
     } catch (error) {
       dispatch(
         setNotification(`Something went wrong ${error.message}`, ERROR, 5000),
@@ -27,13 +58,17 @@ const BlogList = () => {
 
   const deleteBlog = async (id) => {
     try {
-      dispatch(removeBlog(id));
+      deleteBlogMutation.mutate(id);
     } catch (error) {
       dispatch(
         setNotification(`Something went wrong ${error.message}`, ERROR, 5000),
       );
     }
   };
+
+  if (result.isLoading) {
+    return <div>loading data...</div>;
+  }
 
   sortedBlogs = [...blogs].sort(compareBlogs);
 

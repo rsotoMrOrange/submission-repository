@@ -3,13 +3,22 @@ import { useDispatch } from "react-redux";
 
 import Togglable from "../togglable/togglable.component";
 
-import { createBlog } from "../../reducers/blogReducer";
 import { setNotification } from "../../reducers/notificationReducer";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import blogService from "../../services/blogs";
 
 const ERROR = "error";
 const SUCCESS = "success";
 
 const BlogForm = () => {
+  const queryClient = useQueryClient();
+  const newBlogMutation = useMutation({
+    mutationFn: blogService.create,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notes"] });
+    },
+  });
+
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
@@ -20,7 +29,7 @@ const BlogForm = () => {
   const createBlogFunc = async (blogObject) => {
     try {
       togglableRef.current.toggleVisibility();
-      dispatch(createBlog(blogObject));
+      newBlogMutation.mutate(blogObject);
       dispatch(
         setNotification(
           `new blog added '${blogObject.title}' written by ${blogObject.author}`,
