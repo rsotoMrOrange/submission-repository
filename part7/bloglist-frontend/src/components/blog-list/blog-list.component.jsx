@@ -13,20 +13,33 @@ const BlogList = () => {
   const result = useQuery({
     queryKey: ["blogs"],
     queryFn: blogService.getAll,
+    refetchOnWindowFocus: false,
   });
   console.log(JSON.parse(JSON.stringify(result)));
 
   const likeBlogMutation = useMutation({
     mutationFn: blogService.update,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+    onSuccess: (likedBlog) => {
+      queryClient.setQueryData(["blogs"], (oldData) => {
+        return oldData.map((blog) => {
+          if (blog.id === likedBlog.id) {
+            return {
+              ...blog,
+              likes: likedBlog.likes,
+            };
+          }
+          return blog;
+        });
+      });
     },
   });
 
   const deleteBlogMutation = useMutation({
     mutationFn: blogService.remove,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+    onSuccess: (id) => {
+      queryClient.setQueryData(["blogs"], (oldBlogs) =>
+        oldBlogs.filter((blog) => blog.id !== id),
+      );
     },
   });
 
