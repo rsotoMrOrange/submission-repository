@@ -9,6 +9,7 @@ import Notification from "./components/notification/notification.component";
 import UserList from "./components/user-list/user-list.component";
 
 import { saveUser } from "./reducers/userReducer";
+import { useUserDispatch, useUserValue } from "./UserContext";
 
 const Home = () => {
   return (
@@ -20,14 +21,15 @@ const Home = () => {
 };
 
 const App = () => {
-  const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.user);
+  const { user } = useUserValue();
+  const userDispatch = useUserDispatch();
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
-      dispatch(saveUser(user));
+      userDispatch({ type: "SET_USER", payload: { user: user } });
+      userDispatch({ type: "SET_TOKEN", payload: { token: user.token } });
     }
   }, []);
 

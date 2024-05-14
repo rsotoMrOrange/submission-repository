@@ -2,6 +2,7 @@ import axios from "axios";
 
 const baseUrl = "/api/blogs";
 
+/* To be used when switching to redux */
 let store;
 let token = null;
 
@@ -18,6 +19,11 @@ function listener() {
   let newToken = store?.getState().user.token;
   setToken(newToken);
 }
+/** To be used when switching to redux */
+
+function getToken() {
+  return `Bearer ${JSON.parse(window.localStorage.getItem("loggedBlogappUser"))?.token}`;
+}
 
 const getAll = () => {
   const request = axios.get(baseUrl);
@@ -26,7 +32,7 @@ const getAll = () => {
 
 const create = async (newObject) => {
   const config = {
-    headers: { Authorization: token },
+    headers: { Authorization: getToken() },
   };
 
   const response = await axios.post(baseUrl, newObject, config);
@@ -35,7 +41,7 @@ const create = async (newObject) => {
 
 const update = async ({ id, newObject }) => {
   const config = {
-    headers: { Authorization: token },
+    headers: { Authorization: getToken() },
   };
 
   const response = await axios.put(`${baseUrl}/${id}`, newObject, config);
@@ -44,7 +50,7 @@ const update = async ({ id, newObject }) => {
 
 const remove = async (id) => {
   const config = {
-    headers: { Authorization: token },
+    headers: { Authorization: getToken() },
   };
 
   await axios.delete(`${baseUrl}/${id}`, config);

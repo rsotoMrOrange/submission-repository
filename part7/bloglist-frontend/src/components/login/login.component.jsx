@@ -1,30 +1,31 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import LoginForm from "../login-form/login-form.component";
 import Togglable from "../togglable/togglable.component";
 
-import { saveUser } from "../../reducers/userReducer";
 import { useNotificationDispatch } from "../../NotificationContext";
 
 import loginService from "../../services/login";
+import { useUserDispatch, useUserValue } from "../../UserContext";
 
 const ERROR = "error";
 const SUCCESS = "success";
 
 const Login = () => {
-  const dispatch = useDispatch();
+  const userDispatch = useUserDispatch();
   const notificationDispatch = useNotificationDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { user } = useSelector((state) => state.user);
+  const { user } = useUserValue();
 
   const handleLogin = async (event) => {
     event.preventDefault();
 
     try {
       const user = await loginService.login({ username, password });
-      dispatch(saveUser(user));
+      userDispatch({ type: "SET_USER", payload: { user: user } });
+      userDispatch({ type: "SET_TOKEN", payload: { token: user.token } });
 
       window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
       notificationDispatch({
