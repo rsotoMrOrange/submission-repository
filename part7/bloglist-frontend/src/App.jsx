@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
 import BlogList from "./components/blog-list/blog-list.component";
@@ -8,8 +7,8 @@ import Login from "./components/login/login.component";
 import Notification from "./components/notification/notification.component";
 import UserList from "./components/user-list/user-list.component";
 
-import { saveUser } from "./reducers/userReducer";
 import { useUserDispatch, useUserValue } from "./UserContext";
+import UserView from "./components/user-view/user-view.component";
 
 const Home = () => {
   return (
@@ -59,6 +58,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/users" element={<UserList />} />
+            <Route path="/users/:id" element={<UserView />} />
           </Routes>
         </Router>
       )}

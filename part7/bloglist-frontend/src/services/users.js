@@ -2,12 +2,12 @@ import axios from "axios";
 
 const baseUrl = "/api/users";
 
-const getById = (id) => {
+export const getById = (id) => {
   const request = axios.get(`${baseUrl}/${id}`);
   return request.then((response) => response.data);
 };
 
-const getAll = () => {
+export const getAll = () => {
   const request = axios.get(baseUrl);
   return request.then((response) => response.data);
 };
