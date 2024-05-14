@@ -8,7 +8,6 @@ import Login from "./components/login/login.component";
 import Notification from "./components/notification/notification.component";
 import UserList from "./components/user-list/user-list.component";
 
-import { initializeBlogs } from "./reducers/blogReducer";
 import { saveUser } from "./reducers/userReducer";
 
 const Home = () => {

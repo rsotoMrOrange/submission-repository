@@ -1,21 +1,22 @@
 import React from "react";
-import { useDispatch } from "react-redux";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import blogService from "../../services/blogs";
 import Blog from "../blog/blog.component";
 
-import { setNotification } from "../../reducers/notificationReducer";
+import { useNotificationDispatch } from "../../NotificationContext";
+
+const ERROR = "error";
 
 const BlogList = () => {
   const queryClient = useQueryClient();
+  const notificationDispatch = useNotificationDispatch();
 
   const result = useQuery({
     queryKey: ["blogs"],
     queryFn: blogService.getAll,
     refetchOnWindowFocus: false,
   });
-  console.log(JSON.parse(JSON.stringify(result)));
 
   const likeBlogMutation = useMutation({
     mutationFn: blogService.update,
@@ -45,7 +46,6 @@ const BlogList = () => {
 
   const blogs = result.data;
 
-  const dispatch = useDispatch();
   let sortedBlogs = [];
 
   const compareBlogs = (a, b) => {
@@ -63,9 +63,18 @@ const BlogList = () => {
         newObject,
       });
     } catch (error) {
-      dispatch(
-        setNotification(`Something went wrong ${error.message}`, ERROR, 5000),
-      );
+      notificationDispatch({
+        type: "SHOW",
+        payload: {
+          message: `Something went wrong ${error.message}`,
+          className: ERROR,
+        },
+      });
+      setTimeout(() => {
+        notificationDispatch({
+          type: "HIDE",
+        });
+      }, 5000);
     }
   };
 
@@ -73,9 +82,18 @@ const BlogList = () => {
     try {
       deleteBlogMutation.mutate(id);
     } catch (error) {
-      dispatch(
-        setNotification(`Something went wrong ${error.message}`, ERROR, 5000),
-      );
+      notificationDispatch({
+        type: "SHOW",
+        payload: {
+          message: `Something went wrong ${error.message}`,
+          className: ERROR,
+        },
+      });
+      setTimeout(() => {
+        notificationDispatch({
+          type: "HIDE",
+        });
+      }, 5000);
     }
   };
 

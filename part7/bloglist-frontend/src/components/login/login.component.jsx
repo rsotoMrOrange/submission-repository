@@ -5,7 +5,7 @@ import LoginForm from "../login-form/login-form.component";
 import Togglable from "../togglable/togglable.component";
 
 import { saveUser } from "../../reducers/userReducer";
-import { setNotification } from "../../reducers/notificationReducer";
+import { useNotificationDispatch } from "../../NotificationContext";
 
 import loginService from "../../services/login";
 
@@ -14,6 +14,7 @@ const SUCCESS = "success";
 
 const Login = () => {
   const dispatch = useDispatch();
+  const notificationDispatch = useNotificationDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { user } = useSelector((state) => state.user);
@@ -26,12 +27,34 @@ const Login = () => {
       dispatch(saveUser(user));
 
       window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
-      dispatch(setNotification(`Welcome ${username}`, SUCCESS, 5000));
+      notificationDispatch({
+        type: "SHOW",
+        payload: {
+          message: `Welcome ${username}`,
+          className: SUCCESS,
+        },
+      });
+      setTimeout(() => {
+        notificationDispatch({
+          type: "HIDE",
+        });
+      }, 5000);
 
       setPassword("");
       setUsername("");
     } catch (e) {
-      dispatch(setNotification("Wrong credentials", ERROR, 5000));
+      notificationDispatch({
+        type: "SHOW",
+        payload: {
+          message: "Wrong credentials",
+          className: ERROR,
+        },
+      });
+      setTimeout(() => {
+        notificationDispatch({
+          type: "HIDE",
+        });
+      }, 5000);
     }
   };
 

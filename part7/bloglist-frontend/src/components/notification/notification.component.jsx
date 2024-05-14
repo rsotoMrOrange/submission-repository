@@ -1,10 +1,9 @@
 import "./notification.styles.css";
 import { useSelector } from "react-redux";
+import { useNotificationValue } from "../../NotificationContext";
 
 const Notification = () => {
-  const { message, show, className } = useSelector(
-    (state) => state.notification,
-  );
+  const { message, show, className } = useNotificationValue();
 
   if (!show) {
     return null;

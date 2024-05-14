@@ -1,11 +1,10 @@
 import React, { useState, useRef } from "react";
-import { useDispatch } from "react-redux";
 
 import Togglable from "../togglable/togglable.component";
 
-import { setNotification } from "../../reducers/notificationReducer";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import blogService from "../../services/blogs";
+import { useNotificationDispatch } from "../../NotificationContext";
 
 const ERROR = "error";
 const SUCCESS = "success";
@@ -25,23 +24,37 @@ const BlogForm = () => {
   const [url, setUrl] = useState("");
   const [likes, setLikes] = useState(0);
   const togglableRef = useRef(null);
-  const dispatch = useDispatch();
+  const notificationDispatch = useNotificationDispatch();
 
   const createBlogFunc = async (blogObject) => {
     try {
       togglableRef.current.toggleVisibility();
       newBlogMutation.mutate(blogObject);
-      dispatch(
-        setNotification(
-          `new blog added '${blogObject.title}' written by ${blogObject.author}`,
-          SUCCESS,
-          5000,
-        ),
-      );
+      notificationDispatch({
+        type: "SHOW",
+        payload: {
+          message: `new blog added '${blogObject.title}' written by ${blogObject.author}`,
+          className: SUCCESS,
+        },
+      });
+      setTimeout(() => {
+        notificationDispatch({
+          type: "HIDE",
+        });
+      }, 5000);
     } catch (error) {
-      dispatch(
-        setNotification(`Something went wrong ${error.message}`, ERROR, 5000),
-      );
+      notificationDispatch({
+        type: "SHOW",
+        payload: {
+          message: `Something went wrong ${error.message}`,
+          className: ERROR,
+        },
+      });
+      setTimeout(() => {
+        notificationDispatch({
+          type: "HIDE",
+        });
+      }, 5000);
     }
   };
 
