@@ -6,7 +6,7 @@ const UserView = () => {
   const userId = useParams().id;
 
   const result = useQuery({
-    queryKey: ["blogs", userId],
+    queryKey: ["users", userId],
     queryFn: () => getById(userId),
     refetchOnWindowFocus: false,
   });
@@ -17,7 +17,6 @@ const UserView = () => {
     return <div>loading...</div>;
   }
 
-  console.log("user: ", user);
   return (
     <>
       <h1>{user.name}</h1>

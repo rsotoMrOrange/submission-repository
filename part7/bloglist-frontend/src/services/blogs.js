@@ -25,12 +25,17 @@ function getToken() {
   return `Bearer ${JSON.parse(window.localStorage.getItem("loggedBlogappUser"))?.token}`;
 }
 
-const getAll = () => {
+export const getById = (id) => {
+  const request = axios.get(`${baseUrl}/${id}`);
+  return request.then((response) => response.data);
+};
+
+export const getAll = () => {
   const request = axios.get(baseUrl);
   return request.then((response) => response.data);
 };
 
-const create = async (newObject) => {
+export const create = async (newObject) => {
   const config = {
     headers: { Authorization: getToken() },
   };
@@ -39,7 +44,7 @@ const create = async (newObject) => {
   return response.data;
 };
 
-const update = async ({ id, newObject }) => {
+export const update = async ({ id, newObject }) => {
   const config = {
     headers: { Authorization: getToken() },
   };
@@ -48,7 +53,7 @@ const update = async ({ id, newObject }) => {
   return response.data;
 };
 
-const remove = async (id) => {
+export const remove = async (id) => {
   const config = {
     headers: { Authorization: getToken() },
   };
@@ -57,4 +62,4 @@ const remove = async (id) => {
   return id;
 };
 
-export default { getAll, create, update, remove, setToken };
+export default { getById, getAll, create, update, remove, setToken };
