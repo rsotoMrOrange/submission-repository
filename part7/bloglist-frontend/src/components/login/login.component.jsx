@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
 
 import LoginForm from "../login-form/login-form.component";
 import Togglable from "../togglable/togglable.component";
@@ -8,6 +7,7 @@ import { useNotificationDispatch } from "../../NotificationContext";
 
 import loginService from "../../services/login";
 import { useUserDispatch, useUserValue } from "../../UserContext";
+import { useNavigate } from "react-router-dom";
 
 const ERROR = "error";
 const SUCCESS = "success";
@@ -18,6 +18,17 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { user } = useUserValue();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      userDispatch({ type: "SET_USER", payload: { user: user } });
+      userDispatch({ type: "SET_TOKEN", payload: { token: user.token } });
+      navigate("/");
+    }
+  }, []);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -43,6 +54,7 @@ const Login = () => {
 
       setPassword("");
       setUsername("");
+      navigate("/");
     } catch (e) {
       notificationDispatch({
         type: "SHOW",
@@ -73,7 +85,7 @@ const Login = () => {
     );
   };
 
-  if (user === null) {
+  if (user === null || user === undefined) {
     return (
       <div>
         <div>
@@ -86,7 +98,7 @@ const Login = () => {
 
   return (
     <div>
-      <p>{user.name} logged in</p>
+      <p>{user?.username} logged in</p>
       <button
         onClick={() => {
           window.localStorage.clear();

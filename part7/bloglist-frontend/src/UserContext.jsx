@@ -5,13 +5,13 @@ const userReducer = (state, action) => {
     case "SET_USER": {
       return {
         ...state,
-        user: action.payload,
+        user: action.payload.user,
       };
     }
     case "SET_TOKEN": {
       return {
         ...state,
-        token: action.payload,
+        token: action.payload.token,
       };
     }
     default:
