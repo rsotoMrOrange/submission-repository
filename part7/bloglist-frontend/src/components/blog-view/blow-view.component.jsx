@@ -1,7 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getById, update, remove } from "../../services/blogs";
+import { getById, update, remove, createComment } from "../../services/blogs";
 import { useNotificationDispatch } from "../../NotificationContext";
+import { useState } from "react";
 
 const ERROR = "error";
 
@@ -10,6 +11,7 @@ const BlogView = () => {
   const queryClient = useQueryClient();
   const notificationDispatch = useNotificationDispatch();
   const navigate = useNavigate();
+  const [comment, setComment] = useState("");
 
   const result = useQuery({
     queryKey: ["blogs", { id: blogId }],
@@ -24,6 +26,16 @@ const BlogView = () => {
       await deleteBlog(blog.id);
     }
   };
+
+  const addCommentMutation = useMutation({
+    mutationFn: createComment,
+    onSuccess: (commentedBlog) => {
+      queryClient.setQueryData(
+        ["blogs", { id: blogId }],
+        (oldBlog) => commentedBlog,
+      );
+    },
+  });
 
   const likeBlogMutation = useMutation({
     mutationFn: update,
@@ -47,6 +59,28 @@ const BlogView = () => {
       );
     },
   });
+
+  const addComment = async () => {
+    try {
+      addCommentMutation.mutate({
+        blogId: blog.id,
+        content: comment,
+      });
+    } catch (error) {
+      notificationDispatch({
+        type: "SHOW",
+        payload: {
+          message: `Something went wrong ${error.message}`,
+          className: ERROR,
+        },
+      });
+      setTimeout(() => {
+        notificationDispatch({
+          type: "HIDE",
+        });
+      }, 5000);
+    }
+  };
 
   const updateBlog = async () => {
     try {
@@ -114,6 +148,23 @@ const BlogView = () => {
       </p>
       <p>added by {blog?.user?.name}</p>
       {isLoggedUserOwner() && <button onClick={removeBlog}>remove</button>}
+      <h3>Comments</h3>
+      <input
+        type="text"
+        placeholder="add your comment..."
+        value={comment}
+        onChange={(e) => {
+          setComment(e.target.value);
+        }}
+      ></input>
+      <button onClick={addComment}>add comment</button>
+      {blog.comments.length > 0 && (
+        <ul>
+          {blog.comments.map((comment) => (
+            <li key={comment.id}>{comment.content}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

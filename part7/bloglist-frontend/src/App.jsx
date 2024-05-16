@@ -18,21 +18,9 @@ import UserView from "./components/user-view/user-view.component";
 import { useUserDispatch, useUserValue } from "./UserContext";
 
 const Home = () => {
-  const { user } = useUserValue();
-
   return (
     <>
-      <div>
-        <p>{user?.username} logged in</p>
-        <button
-          onClick={() => {
-            window.localStorage.clear();
-            window.location.reload();
-          }}
-        >
-          logout
-        </button>
-      </div>
+      <div></div>
       <BlogForm />
       <BlogList />
     </>
@@ -62,17 +50,29 @@ const App = () => {
 
   return (
     <div>
+      {user && (
+        <div style={padding}>
+          <Link style={padding} to="/">
+            home
+          </Link>
+          <Link style={padding} to="/users">
+            users
+          </Link>
+          <span>{user?.name} logged in</span>
+          <button
+            onClick={() => {
+              window.localStorage.clear();
+              window.location.reload();
+            }}
+          >
+            logout
+          </button>
+        </div>
+      )}
+
       <h1>blogs</h1>
       <Notification />
       <hr />
-      <div style={padding}>
-        <Link style={padding} to="/">
-          home
-        </Link>
-        <Link style={padding} to="/users">
-          users
-        </Link>
-      </div>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />

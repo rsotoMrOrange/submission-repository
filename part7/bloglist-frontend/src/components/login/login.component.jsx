@@ -85,28 +85,12 @@ const Login = () => {
     );
   };
 
-  if (user === null || user === undefined) {
-    return (
-      <div>
-        <div>
-          <h2>log in to application</h2>
-          {loginForm()}
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div>
-      <p>{user?.username} logged in</p>
-      <button
-        onClick={() => {
-          window.localStorage.clear();
-          window.location.reload();
-        }}
-      >
-        logout
-      </button>
+      <div>
+        <h2>log in to application</h2>
+        {loginForm()}
+      </div>
     </div>
   );
 };
