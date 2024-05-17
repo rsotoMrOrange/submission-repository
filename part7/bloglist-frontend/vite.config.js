@@ -8,6 +8,7 @@ export default defineConfig({
     proxy: {
       "/api": {
         target: "http://localhost:3003",
+        // target: "https://blog-list-s9ru.onrender.com/",
         changeOrigin: true,
       },
     },

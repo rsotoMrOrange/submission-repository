@@ -7,6 +7,11 @@ import { NotificationContextProvider } from "./NotificationContext";
 import { UserContextProvider } from "./UserContext";
 import { BrowserRouter as Router } from "react-router-dom";
 
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
+
 // To be used when switching to redux
 
 /* import { Provider } from "react-redux";

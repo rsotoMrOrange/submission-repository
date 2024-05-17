@@ -4,6 +4,8 @@ import { getById, update, remove, createComment } from "../../services/blogs";
 import { useNotificationDispatch } from "../../NotificationContext";
 import { useState } from "react";
 
+import { Button, Box, Link, IconButton, Typography } from "@mui/material";
+
 const ERROR = "error";
 
 const BlogView = () => {
@@ -141,11 +143,17 @@ const BlogView = () => {
 
   return (
     <div>
-      <h1>{blog.title}</h1>
-      <a href={blog.url}>{blog.url}</a>
-      <p>
-        {blog.likes} <button onClick={updateBlog}>like</button>
-      </p>
+      <Typography variant="h2" gutterBottom>
+        {blog.title}
+      </Typography>
+      <Box marginBottom={1}>
+        <Link href={blog.url} underline="hover">
+          {blog.url}
+        </Link>
+      </Box>
+      <Typography variant="body">
+        {blog.likes} <Button onClick={updateBlog}>like</Button>
+      </Typography>
       <p>added by {blog?.user?.name}</p>
       {isLoggedUserOwner() && <button onClick={removeBlog}>remove</button>}
       <h3>Comments</h3>

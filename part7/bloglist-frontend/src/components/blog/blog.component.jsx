@@ -1,18 +1,18 @@
-import { useState } from "react";
 import PropType from "prop-types";
 import "./blog.styles.css";
 import { Link } from "react-router-dom";
+import { Box } from "@mui/material";
 
 const Blog = ({ blog }) => {
   return (
-    <div className="blogStyle">
+    <Box className="blogStyle" padding={1}>
       <p>
         <Link to={`/blogs/${blog.id}`}>
           {" "}
           {blog.title} - {blog.author}{" "}
         </Link>
       </p>
-    </div>
+    </Box>
   );
 };
 

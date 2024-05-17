@@ -6,6 +6,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import blogService from "../../services/blogs";
 import { useNotificationDispatch } from "../../NotificationContext";
 
+import { TextField } from "@mui/material";
+
 const ERROR = "error";
 const SUCCESS = "success";
 
@@ -76,7 +78,16 @@ const BlogForm = () => {
   return (
     <Togglable buttonLabel="New Blog" ref={togglableRef}>
       <form onSubmit={addBlog}>
-        <div>
+        <TextField
+          margin="dense"
+          size="small"
+          className="title"
+          name="Title"
+          label="Title"
+          value={title}
+          onChange={({ target }) => setTitle(target.value)}
+        />
+        {/* <div>
           title
           <input
             className="title"
@@ -85,7 +96,7 @@ const BlogForm = () => {
             name="Title"
             onChange={({ target }) => setTitle(target.value)}
           />
-        </div>
+  </div> */}
         <div>
           author
           <input

@@ -1,11 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Link,
-  useNavigate,
-} from "react-router-dom";
+import { Routes, Route, Link, useNavigate } from "react-router-dom";
 
 import BlogList from "./components/blog-list/blog-list.component";
 import BlogForm from "./components/blog-form/blog-form.component";
@@ -17,10 +11,18 @@ import UserView from "./components/user-view/user-view.component";
 
 import { useUserDispatch, useUserValue } from "./UserContext";
 
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
+import { Container } from "@mui/material";
+import Divider from "@mui/material/Divider";
+import { lightBlue } from "@mui/material/colors";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+
 const Home = () => {
   return (
     <>
-      <div></div>
       <BlogForm />
       <BlogList />
     </>
@@ -49,30 +51,44 @@ const App = () => {
   };
 
   return (
-    <div>
+    <Container>
       {user && (
-        <div style={padding}>
+        <Stack direction="row" spacing={2} alignItems="center">
           <Link style={padding} to="/">
             home
           </Link>
           <Link style={padding} to="/users">
             users
           </Link>
-          <span>{user?.name} logged in</span>
-          <button
+          <Chip
+            color="primary"
+            variant="outlined"
+            avatar={
+              <Avatar sx={{ bgcolor: lightBlue[100] }}>
+                {user?.name?.at(0)}
+              </Avatar>
+            }
+            label={user?.name}
+          />
+          <Divider orientation="vertical" flexItem />
+          <Button
+            variant="contained"
+            size="small"
             onClick={() => {
               window.localStorage.clear();
               window.location.reload();
             }}
           >
             logout
-          </button>
-        </div>
+          </Button>
+        </Stack>
       )}
 
-      <h1>blogs</h1>
+      <Typography variant="h1" gutterBottom>
+        blogs
+      </Typography>
       <Notification />
-      <hr />
+      <Divider variant="middle" sx={{ mt: 4, mb: 4 }} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -80,7 +96,7 @@ const App = () => {
         <Route path="/users/:id" element={<UserView />} />
         <Route path="/blogs/:id" element={<BlogView />} />
       </Routes>
-    </div>
+    </Container>
   );
 };
 
