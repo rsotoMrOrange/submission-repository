@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import blogService from "../../services/blogs";
 import Blog from "../blog/blog.component";
 
+import { List, ListItem } from "@mui/material";
+
 const BlogList = () => {
   const result = useQuery({
     queryKey: ["blogs"],
@@ -26,11 +28,13 @@ const BlogList = () => {
   sortedBlogs = [...blogs].sort(compareBlogs);
 
   return (
-    <>
+    <List>
       {sortedBlogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <ListItem key={blog.id} disablePadding>
+          <Blog blog={blog} />
+        </ListItem>
       ))}
-    </>
+    </List>
   );
 };
 

@@ -2,6 +2,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import userService from "../../services/users";
 import User from "../user/user.component";
+import { Box, List, ListItem, Typography } from "@mui/material";
 
 const UserList = () => {
   const result = useQuery({
@@ -17,17 +18,22 @@ const UserList = () => {
   }
 
   return (
-    <div>
-      <h2>Users</h2>
-      {users.map((user) => (
-        <User
-          key={user.username}
-          userId={user.id}
-          name={user.name}
-          blogCount={user.blogs.length}
-        />
-      ))}
-    </div>
+    <Box>
+      <Typography variant="h2" gutterBottom>
+        Users
+      </Typography>
+      <List>
+        {users.map((user) => (
+          <ListItem key={user.id}>
+            <User
+              userId={user.id}
+              name={user.name}
+              blogCount={user.blogs.length}
+            />
+          </ListItem>
+        ))}
+      </List>
+    </Box>
   );
 };
 

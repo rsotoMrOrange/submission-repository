@@ -6,8 +6,10 @@ import Togglable from "../togglable/togglable.component";
 import { useNotificationDispatch } from "../../NotificationContext";
 
 import loginService from "../../services/login";
-import { useUserDispatch, useUserValue } from "../../UserContext";
+import { useUserDispatch } from "../../UserContext";
 import { useNavigate } from "react-router-dom";
+
+import { Box, Typography } from "@mui/material";
 
 const ERROR = "error";
 const SUCCESS = "success";
@@ -17,7 +19,6 @@ const Login = () => {
   const notificationDispatch = useNotificationDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { user } = useUserValue();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -86,12 +87,12 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <div>
-        <h2>log in to application</h2>
-        {loginForm()}
-      </div>
-    </div>
+    <Box>
+      <Typography variant="h2" gutterBottom>
+        log in to application
+      </Typography>
+      {loginForm()}
+    </Box>
   );
 };
 

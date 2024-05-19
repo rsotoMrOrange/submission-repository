@@ -4,7 +4,16 @@ import { getById, update, remove, createComment } from "../../services/blogs";
 import { useNotificationDispatch } from "../../NotificationContext";
 import { useState } from "react";
 
-import { Button, Box, Link, IconButton, Typography } from "@mui/material";
+import {
+  Button,
+  Box,
+  Link,
+  Typography,
+  TextField,
+  List,
+  ListItem,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const ERROR = "error";
 
@@ -81,6 +90,8 @@ const BlogView = () => {
           type: "HIDE",
         });
       }, 5000);
+    } finally {
+      setComment("");
     }
   };
 
@@ -142,38 +153,64 @@ const BlogView = () => {
   }
 
   return (
-    <div>
+    <Box>
       <Typography variant="h2" gutterBottom>
-        {blog.title}
+        {blog.title} by {blog.author}
       </Typography>
-      <Box marginBottom={1}>
+      <Box m={2}>
         <Link href={blog.url} underline="hover">
           {blog.url}
         </Link>
+        <Typography variant="body" sx={{ display: "block" }}>
+          {blog.likes} <Button onClick={updateBlog}>like</Button>
+        </Typography>
+        <Typography variant="body" sx={{ display: "block" }}>
+          added by {blog?.user?.name}
+        </Typography>
+        {isLoggedUserOwner() && (
+          <Button
+            sx={{ mt: 2 }}
+            onClick={removeBlog}
+            variant="contained"
+            startIcon={<DeleteIcon />}
+          >
+            remove
+          </Button>
+        )}
       </Box>
-      <Typography variant="body">
-        {blog.likes} <Button onClick={updateBlog}>like</Button>
+      <Typography variant="h3" gutterBottom>
+        Comments
       </Typography>
-      <p>added by {blog?.user?.name}</p>
-      {isLoggedUserOwner() && <button onClick={removeBlog}>remove</button>}
-      <h3>Comments</h3>
-      <input
-        type="text"
-        placeholder="add your comment..."
+      <TextField
+        label="comment"
         value={comment}
-        onChange={(e) => {
-          setComment(e.target.value);
-        }}
-      ></input>
-      <button onClick={addComment}>add comment</button>
+        onChange={(e) => setComment(e.target.value)}
+        size="small"
+        sx={{ mx: 1 }}
+      />
+      <Button variant="contained" onClick={addComment}>
+        add comment
+      </Button>
       {blog.comments.length > 0 && (
-        <ul>
+        <List>
           {blog.comments.map((comment) => (
-            <li key={comment.id}>{comment.content}</li>
+            <ListItem key={comment.id}>
+              <Box
+                padding={1}
+                sx={{
+                  "&:hover": {
+                    background: "#def1ff",
+                    borderRadius: "8%",
+                  },
+                }}
+              >
+                <Typography variant="body">{comment.content}</Typography>
+              </Box>
+            </ListItem>
           ))}
-        </ul>
+        </List>
       )}
-    </div>
+    </Box>
   );
 };
 

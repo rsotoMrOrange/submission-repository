@@ -55,10 +55,34 @@ const App = () => {
       {user && (
         <Stack direction="row" spacing={2} alignItems="center">
           <Link style={padding} to="/">
-            home
+            <Typography
+              variant="body"
+              padding={1}
+              sx={{
+                "&:hover": {
+                  borderRadius: "8%",
+                  background: "#1976D2",
+                  color: "white",
+                },
+              }}
+            >
+              home
+            </Typography>
           </Link>
           <Link style={padding} to="/users">
-            users
+            <Typography
+              variant="body"
+              padding={1}
+              sx={{
+                "&:hover": {
+                  borderRadius: "8%",
+                  background: "#1976D2",
+                  color: "white",
+                },
+              }}
+            >
+              users
+            </Typography>
           </Link>
           <Chip
             color="primary"

@@ -1,7 +1,5 @@
 import { createContext, useReducer, useContext } from "react";
 
-export const actions = {};
-
 const notificationReducer = (state, action) => {
   switch (action.type) {
     case "SHOW": {

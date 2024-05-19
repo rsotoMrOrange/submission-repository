@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import blogService from "../../services/blogs";
 import { useNotificationDispatch } from "../../NotificationContext";
 
-import { TextField } from "@mui/material";
+import { Button, Stack, TextField } from "@mui/material";
 
 const ERROR = "error";
 const SUCCESS = "success";
@@ -78,56 +78,50 @@ const BlogForm = () => {
   return (
     <Togglable buttonLabel="New Blog" ref={togglableRef}>
       <form onSubmit={addBlog}>
-        <TextField
-          margin="dense"
-          size="small"
-          className="title"
-          name="Title"
-          label="Title"
-          value={title}
-          onChange={({ target }) => setTitle(target.value)}
-        />
-        {/* <div>
-          title
-          <input
+        <Stack direction="row" spacing={2} mb={1}>
+          <TextField
+            margin="dense"
+            size="small"
             className="title"
-            type="text"
-            value={title}
             name="Title"
+            label="Title"
+            value={title}
             onChange={({ target }) => setTitle(target.value)}
           />
-  </div> */}
-        <div>
-          author
-          <input
+          <TextField
+            margin="dense"
+            size="small"
             className="author"
-            type="text"
-            value={author}
             name="Author"
+            label="Author"
+            value={author}
             onChange={({ target }) => setAuthor(target.value)}
           />
-        </div>
-        <div>
-          url
-          <input
+        </Stack>
+        <Stack direction="row" spacing={2} mb={1}>
+          <TextField
+            margin="dense"
+            size="small"
             className="url"
-            type="text"
+            name="url"
+            label="Url"
             value={url}
-            name="Url"
             onChange={({ target }) => setUrl(target.value)}
           />
-        </div>
-        <div>
-          likes
-          <input
-            className="likes"
+          <TextField
             type="number"
-            value={likes}
+            margin="dense"
+            size="small"
+            className="likes"
             name="Likes"
+            label="Likes"
+            value={likes}
             onChange={({ target }) => setLikes(target.value)}
           />
-        </div>
-        <button type="submit">save</button>
+        </Stack>
+        <Button variant="contained" sx={{ mb: 1 }} type="submit">
+          save
+        </Button>
       </form>
     </Togglable>
   );

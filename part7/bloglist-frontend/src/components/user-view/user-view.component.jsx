@@ -1,6 +1,7 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getById } from "../../services/users";
+import { Box, List, ListItem, Typography } from "@mui/material";
 
 const UserView = () => {
   const userId = useParams().id;
@@ -19,15 +20,31 @@ const UserView = () => {
 
   return (
     <>
-      <h1>{user.name}</h1>
-      <h3>Added blogs</h3>
-      <div>
-        <ul>
+      <Typography variant="h2" gutterBottom>
+        {user.name}
+      </Typography>
+      <Typography variant="h5" mx={2} gutterBottom>
+        Added blogs
+      </Typography>
+      <Box>
+        <List>
           {user.blogs.map((blog) => (
-            <li key={blog.id}>{blog.title}</li>
+            <ListItem key={blog.id}>
+              <Box
+                padding={1}
+                sx={{
+                  "&:hover": {
+                    background: "#def1ff",
+                    borderRadius: "8%",
+                  },
+                }}
+              >
+                <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+              </Box>
+            </ListItem>
           ))}
-        </ul>
-      </div>
+        </List>
+      </Box>
     </>
   );
 };

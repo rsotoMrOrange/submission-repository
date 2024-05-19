@@ -1,6 +1,7 @@
 import "./notification.styles.css";
-import { useSelector } from "react-redux";
 import { useNotificationValue } from "../../NotificationContext";
+
+import { Box } from "@mui/material";
 
 const Notification = () => {
   const { message, show, className } = useNotificationValue();
@@ -9,7 +10,7 @@ const Notification = () => {
     return null;
   }
 
-  return <div className={className}>{message}</div>;
+  return <Box className={className}>{message}</Box>;
 };
 
 export default Notification;
