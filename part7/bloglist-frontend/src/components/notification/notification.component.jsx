@@ -1,15 +1,16 @@
-import './notification.styles.css'
+import "./notification.styles.css";
+import { useNotificationValue } from "../../NotificationContext";
 
-const Notification = ({ message }) => {
-  if (message === null) {
-    return null
+import { Box } from "@mui/material";
+
+const Notification = () => {
+  const { message, show, className } = useNotificationValue();
+
+  if (!show) {
+    return null;
   }
 
-  return (
-    <div className={message.className}>
-      {message.display}
-    </div>
-  )
-}
+  return <Box className={className}>{message}</Box>;
+};
 
-export default Notification
+export default Notification;

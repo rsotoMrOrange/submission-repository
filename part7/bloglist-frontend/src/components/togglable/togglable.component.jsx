@@ -1,39 +1,44 @@
-import React, { useState, forwardRef, useImperativeHandle } from 'react'
-import PropTypes from 'prop-types'
+import React, { useState, forwardRef, useImperativeHandle } from "react";
+import PropTypes from "prop-types";
+import { Button, Box } from "@mui/material";
 
 const Togglable = forwardRef((props, refs) => {
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(false);
 
-  const hiddenWhenVisible = { display: visible ? 'none' : '' }
-  const showWhenVisible = { display: visible ? '' : 'none' }
+  const hiddenWhenVisible = { display: visible ? "none" : "" };
+  const showWhenVisible = { display: visible ? "" : "none" };
 
   const toggleVisibility = () => {
-    setVisible(!visible)
-  }
+    setVisible(!visible);
+  };
 
   useImperativeHandle(refs, () => {
     return {
-      toggleVisibility
-    }
-  })
+      toggleVisibility,
+    };
+  });
 
   return (
-    <div>
+    <Box marginBottom={2}>
       <div style={hiddenWhenVisible}>
-        <button onClick={toggleVisibility}>{props.buttonLabel}</button>
+        <Button variant="outlined" onClick={toggleVisibility}>
+          {props.buttonLabel}
+        </Button>
       </div>
-      <div style={showWhenVisible} className='togglableContent'>
+      <div style={showWhenVisible} className="togglableContent">
         {props.children}
-        <button onClick={toggleVisibility}>cancel</button>
+        <Button variant="outlined" onClick={toggleVisibility} sx={{ mb: 1 }}>
+          cancel
+        </Button>
       </div>
-    </div>
-  )
-})
+    </Box>
+  );
+});
 
-Togglable.displayName = 'Togglable'
+Togglable.displayName = "Togglable";
 
 Togglable.propTypes = {
-  buttonLabel: PropTypes.string.isRequired
-}
+  buttonLabel: PropTypes.string.isRequired,
+};
 
-export default Togglable
+export default Togglable;
